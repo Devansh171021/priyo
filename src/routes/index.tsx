@@ -35,7 +35,15 @@ function Index() {
   const shotTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      // Secret developer shortcut: Alt + Shift + D or Ctrl + Shift + D
+      if ((e.altKey || e.ctrlKey) && e.shiftKey && (e.key === "d" || e.key === "D")) {
+        setDevBypass((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKey);
     return () => {
+      window.removeEventListener("keydown", handleKey);
       if (shotTimerRef.current) window.clearTimeout(shotTimerRef.current);
     };
   }, []);
@@ -99,12 +107,23 @@ function WaitingRoom({
 }: {
   days: number; hours: number; minutes: number; seconds: number; onBypass: () => void;
 }) {
-  const timer = useRef<number | null>(null);
   const [tapCount, setTapCount] = useState(0);
   const [isShaking, setIsShaking] = useState(false);
+  const secretTapCounterRef = useRef<number>(0);
+  const secretTapTimerRef = useRef<number | null>(null);
 
-  const start = () => { timer.current = window.setTimeout(onBypass, 2000); };
-  const cancel = () => { if (timer.current) window.clearTimeout(timer.current); };
+  const handleSecretPillClick = () => {
+    secretTapCounterRef.current += 1;
+    if (secretTapTimerRef.current) window.clearTimeout(secretTapTimerRef.current);
+    if (secretTapCounterRef.current >= 7) {
+      secretTapCounterRef.current = 0;
+      onBypass();
+    } else {
+      secretTapTimerRef.current = window.setTimeout(() => {
+        secretTapCounterRef.current = 0;
+      }, 2500);
+    }
+  };
 
   const handleHeartClick = () => {
     playSuppressedShot();
@@ -139,8 +158,11 @@ function WaitingRoom({
       </div>
 
       <div className="glass-card animate-modal-in relative w-full max-w-md rounded-[2.5rem] px-5 py-8 sm:px-7 sm:py-10 text-center my-auto border border-primary/40 shadow-[0_0_80px_rgba(244,114,182,0.22)] backdrop-blur-2xl">
-        {/* Top System Pill */}
-        <div className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/15 px-3.5 py-1 text-[9px] font-semibold uppercase tracking-[0.3em] text-primary mb-6 sm:mb-8 shadow-sm">
+        {/* Top System Pill (Hidden 7-tap secret trigger for developer testing) */}
+        <div
+          onClick={handleSecretPillClick}
+          className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/15 px-3.5 py-1 text-[9px] font-semibold uppercase tracking-[0.3em] text-primary mb-6 sm:mb-8 shadow-sm cursor-default"
+        >
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
           Project Anmona &middot; Armed &amp; Waiting
         </div>
@@ -149,18 +171,13 @@ function WaitingRoom({
         <div className="relative mx-auto mb-6 sm:mb-8 w-fit">
           <button
             type="button"
-            onMouseDown={start}
-            onMouseUp={cancel}
-            onMouseLeave={cancel}
-            onTouchStart={start}
-            onTouchEnd={cancel}
             onClick={handleHeartClick}
             className={
               "group relative mx-auto grid h-22 w-22 sm:h-24 sm:w-24 place-items-center rounded-full pearl-rose transition duration-200 cursor-pointer shadow-[0_0_40px_rgba(244,114,182,0.5)] " +
               (isShaking ? "animate-target-recoil scale-90" : "animate-float-soft hover:scale-105 active:scale-95")
             }
-            aria-label="Locked — click to test aim, hold for Dev Access"
-            title="Tap to test aim, hold for Dev Access"
+            aria-label="Locked — click to test aim"
+            title="Locked until countdown zero"
           >
             <div className="absolute inset-2 rounded-full border border-primary-foreground/30 pointer-events-none" />
             <Heart className="h-10 w-10 sm:h-11 sm:w-11 text-primary-foreground group-hover:scale-110 transition animate-pulse" strokeWidth={1.4} fill="currentColor" />
@@ -235,17 +252,6 @@ function WaitingRoom({
           <span className="h-px w-8 bg-border" />
           Sealed with love
           <span className="h-px w-8 bg-border" />
-        </div>
-
-        {/* Developer Access Button */}
-        <div className="mt-6">
-          <button
-            type="button"
-            onClick={onBypass}
-            className="inline-flex items-center gap-1.5 rounded-full border border-primary/50 bg-primary/20 px-4 py-2 sm:px-5 sm:py-2.5 text-[10px] font-bold uppercase tracking-[0.25em] text-primary transition hover:bg-primary hover:text-primary-foreground active:scale-95 shadow-lg"
-          >
-            ⚡ Dev Access (Unlock All)
-          </button>
         </div>
       </div>
     </div>
