@@ -211,18 +211,25 @@ function WaitingRoom({
           Initiating &ldquo;Project Anmona&rdquo;
         </p>
 
-        <p className="serif mt-4 text-[15px] sm:text-[16px] leading-relaxed italic text-foreground/90 max-h-[28vh] overflow-y-auto px-1">
-          You didn&rsquo;t actually think I was just going to say
-          &ldquo;Happy Birthday&rdquo; on August 14th and leave it at that,
-          did you? You are stepping into your twenties, and a milestone like
-          that requires a proper buildup. Hidden behind this screen is a
-          30-day map. 30 days of memories, truths, and exactly why you are
-          the best part of my life. But you are impatient, and I know
-          you&rsquo;re already trying to figure out how to bypass this lock.
-          Nice try. The first target unlocks exactly when this timer hits
-          zero. Save this link to your home screen, get comfortable, and
-          wait. The countdown to 20 is about to begin.
-        </p>
+        <div className="serif not-italic mt-5 text-[15px] sm:text-[16px] leading-relaxed text-foreground/95 space-y-3.5 max-h-[30vh] overflow-y-auto px-2 text-left">
+          <p>
+            You didn&rsquo;t actually think I was just going to say
+            &ldquo;Happy Birthday&rdquo; on August 14th and leave it at that,
+            did you? You are stepping into your twenties, and a milestone like
+            that requires a proper buildup.
+          </p>
+          <p>
+            Hidden behind this screen is a 30-day map. 30 days of memories,
+            truths, and exactly why you are the best part of my life. But you
+            are impatient, and I know you&rsquo;re already trying to figure out
+            how to bypass this lock.
+          </p>
+          <p>
+            Nice try. The first target unlocks exactly when this timer hits
+            zero. Save this link to your home screen, get comfortable, and
+            wait. The countdown to 20 is about to begin.
+          </p>
+        </div>
 
         <div className="mt-6 flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
           <span className="h-px w-8 bg-border" />
@@ -752,8 +759,8 @@ function AutoAudioPlayer({
         {playing ? <Pause className="h-5 w-5" /> : <Play className="ml-0.5 h-5 w-5" />}
       </button>
       <div className="min-w-0 flex-1">
-        <div className="mb-1.5 flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-primary">
-          <span className="truncate">Voice note message</span>
+        <div className="mb-1.5 flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+          <span>AUDIO MEMORY</span>
           <span className="tabular-nums font-mono">
             {fmt((progress / 100) * duration)} / {fmt(duration)}
           </span>
@@ -798,35 +805,31 @@ function DayModal({ day, onClose }: { day: number; onClose: () => void }) {
         className="paper-card animate-modal-slide-in relative w-full max-w-md overflow-hidden rounded-[2.2rem] my-auto border border-primary/40 shadow-[0_0_60px_rgba(0,0,0,0.6)]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="pointer-events-none absolute inset-0 rounded-[2.2rem] ring-1 ring-inset ring-white/10" />
-
         <button
+          type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 z-20 grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-full bg-background/90 text-espresso backdrop-blur transition hover:bg-primary hover:text-primary-foreground active:scale-90 border border-border shadow-md"
+          className="absolute right-4 top-4 z-10 rounded-full border border-primary/40 bg-background/80 p-2 text-foreground transition hover:bg-primary/20 active:scale-90"
           aria-label="Close"
         >
-          <X className="h-5 w-5" />
+          <X className="h-4 w-4" />
         </button>
 
-        <div className="flex items-center justify-between px-6 pt-6 sm:px-7 sm:pt-7 pr-16">
-          <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.35em] text-primary">
-            {content?.target ?? "A letter"}
-          </span>
-          <span className="text-[10px] uppercase tracking-[0.35em] text-muted-foreground font-medium">
-            Day {String(day).padStart(2, "0")} / 30
-          </span>
+        <div className="border-b border-border/80 px-6 pt-7 pb-5 text-center sm:px-7">
+          <div className="text-[10px] uppercase tracking-[0.35em] text-primary font-semibold">
+            Target Locked &middot; Day {String(day).padStart(2, "0")}
+          </div>
+          <h2 className="display mt-1 text-2xl sm:text-3xl font-medium italic text-espresso">
+            {content?.title ?? `Day ${day}`}
+          </h2>
+          {content?.target && (
+            <div className="mt-1 text-[11px] font-semibold text-muted-foreground">
+              {content.target}
+            </div>
+          )}
         </div>
 
-        {content?.title && (
-          <div className="px-6 pt-3 sm:px-7 pr-14">
-            <h3 className="display text-2xl sm:text-3xl font-semibold italic text-espresso text-glow-rose">
-              {content.title}
-            </h3>
-          </div>
-        )}
-
         <div
-          className="mx-6 mt-4 sm:mx-7 overflow-hidden rounded-2xl shadow-[0_20px_40px_-24px_oklch(0.1_0.05_20/0.8)] border border-primary/25"
+          className="relative mx-6 mt-6 sm:mx-7 overflow-hidden rounded-2xl border border-primary/30 bg-muted/30 shadow-inner"
           style={{ aspectRatio: "4 / 5" }}
         >
           <AutoMediaFrame day={day} photoUrl={content?.photoUrl} />
@@ -845,13 +848,22 @@ function DayModal({ day, onClose }: { day: number; onClose: () => void }) {
             <span className="h-px flex-1 bg-border" />
           </div>
           <div className="max-h-[38vh] overflow-y-auto pr-2 pb-2">
-            <p className="serif whitespace-pre-line text-[16px] sm:text-[17px] leading-[1.8] text-foreground/95">
-              <span className="display float-left mr-2.5 text-5xl italic leading-[0.85] text-primary">
-                {"“"}
-              </span>
-              {content?.letter ??
-                "This day has not unlocked yet. Check back when the timer reaches midnight IST."}
-            </p>
+            <div className="serif not-italic text-[16px] sm:text-[17px] leading-[1.8] text-foreground/95 space-y-4 text-left">
+              {content?.letter ? (
+                content.letter.split(/\n+/).map((para, idx) => (
+                  <p key={idx}>
+                    {idx === 0 && (
+                      <span className="display float-left mr-2.5 text-5xl italic leading-[0.85] text-primary">
+                        {"“"}
+                      </span>
+                    )}
+                    {para.trim()}
+                  </p>
+                ))
+              ) : (
+                <p>This day has not unlocked yet. Check back when the timer reaches midnight IST.</p>
+              )}
+            </div>
             <p className="serif mt-6 text-right text-[17px] italic text-primary font-medium">
               &mdash; yours, D
             </p>

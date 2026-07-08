@@ -17,9 +17,8 @@ export const DAYS: DayContent[] = [
     target: "Target 01: Welcome to the Map",
     title: "Day 1: Welcome to the Map",
     letter:
-      "Welcome to Day 1.\n\n" +
       "You didn’t actually think I was just going to send you a standard 'Happy Birthday' text at midnight on August 14th and call it a day, did you? You are stepping into your twenties, and a milestone like that deserves a proper buildup.\n\n" +
-      "I built this 30-day map because I wanted to give you something that lasts longer than a single day. Over the next month, you are going to unlock 30 different targets. Each one is a memory, a truth, and a reminder of exactly why you are the absolute best part of my life. I wanted you to wake up every single morning and see yourself exactly the way that I see you.\n" +
+      "I built this 30-day map because I wanted to give you something that lasts longer than a single day. Over the next month, you are going to unlock 30 different targets. Each one is a memory, a truth, and a reminder of exactly why you are the absolute best part of my life. I wanted you to wake up every single morning and see yourself exactly the way that I see you.\n\n" +
       "Target 1 is officially unlocked. Settle in, Priyo—we have 29 days to go.",
   },
   {
