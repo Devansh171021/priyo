@@ -40,14 +40,14 @@ function Index() {
   }, []);
 
   const handleShootDay = (day: number) => {
-    if (!isDayUnlocked(day, now) || shootingDay !== null || openDay !== null) return;
+    if ((!devBypass && !isDayUnlocked(day, now)) || shootingDay !== null || openDay !== null) return;
 
     setShootingDay(day);
     playSuppressedShot();
 
     shotTimerRef.current = window.setTimeout(() => {
       setShootingDay(null);
-      if (isDayUnlocked(day, Date.now())) setOpenDay(day);
+      if (devBypass || isDayUnlocked(day, Date.now())) setOpenDay(day);
       shotTimerRef.current = null;
     }, SHOT_ANIMATION_MS);
   };
@@ -56,8 +56,10 @@ function Index() {
     <div className="relative min-h-screen overflow-x-hidden text-foreground">
       <Dashboard
         now={now}
+        devBypass={devBypass}
         shootingDay={shootingDay}
         onShoot={handleShootDay}
+        onExitDev={() => setDevBypass(false)}
         hidden={waitingRoomActive}
       />
       {waitingRoomActive && (
@@ -69,7 +71,7 @@ function Index() {
           onBypass={() => setDevBypass(true)}
         />
       )}
-      {openDay !== null && isDayUnlocked(openDay, now) && (
+      {openDay !== null && (devBypass || isDayUnlocked(openDay, now)) && (
         <DayModal day={openDay} onClose={() => setOpenDay(null)} />
       )}
     </div>
@@ -104,8 +106,10 @@ function WaitingRoom({
           onMouseLeave={cancel}
           onTouchStart={start}
           onTouchEnd={cancel}
-          className="animate-float-soft group relative mx-auto mb-8 grid h-20 w-20 place-items-center rounded-full pearl-rose transition active:scale-95"
-          aria-label="Locked"
+          onClick={onBypass}
+          className="animate-float-soft group relative mx-auto mb-8 grid h-20 w-20 place-items-center rounded-full pearl-rose transition active:scale-95 cursor-pointer"
+          aria-label="Locked — click or hold for Dev Access"
+          title="Click or hold for Dev Access"
         >
           <Heart className="h-8 w-8 text-primary-foreground" strokeWidth={1.6} fill="currentColor" />
           <span className="absolute -bottom-1 -right-1 grid h-7 w-7 place-items-center rounded-full bg-background/90 backdrop-blur border border-border">
@@ -161,6 +165,17 @@ function WaitingRoom({
           Sealed with love
           <span className="h-px w-8 bg-border" />
         </div>
+
+        {/* Developer Access Button */}
+        <div className="mt-6">
+          <button
+            type="button"
+            onClick={onBypass}
+            className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-primary transition hover:bg-primary hover:text-primary-foreground active:scale-95 shadow-sm"
+          >
+            ⚡ Dev Access (Unlock All)
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -168,11 +183,13 @@ function WaitingRoom({
 
 // ---------- Dashboard ----------
 function Dashboard({
-  now, shootingDay, onShoot, hidden,
+  now, devBypass, shootingDay, onShoot, onExitDev, hidden,
 }: {
   now: number;
+  devBypass: boolean;
   shootingDay: number | null;
   onShoot: (d: number) => void;
+  onExitDev: () => void;
   hidden: boolean;
 }) {
   const nodes = Array.from({ length: TOTAL_DAYS }, (_, i) => i + 1);
@@ -185,6 +202,22 @@ function Dashboard({
       }
       aria-hidden={hidden}
     >
+      {devBypass && (
+        <div className="fixed top-4 right-4 z-40 flex items-center gap-2 rounded-full border border-primary/40 bg-background/90 px-3.5 py-1.5 shadow-lg backdrop-blur">
+          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">
+            Dev Mode: All 30 Unlocked
+          </span>
+          <button
+            onClick={onExitDev}
+            className="ml-1 rounded-full p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground transition"
+            title="Exit Dev Mode"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </div>
+      )}
+
       <header className="mb-10 text-center">
         <p className="text-[10px] uppercase tracking-[0.4em] text-primary">
           Project 20 &middot; Day Map
@@ -205,7 +238,7 @@ function Dashboard({
         <div className="timeline-dotted pointer-events-none absolute left-1/2 top-0 h-full w-[2px] -translate-x-1/2" />
 
         {nodes.slice().reverse().map((n) => {
-          const state = getNodeState(n, now);
+          const state = devBypass ? "completed" : getNodeState(n, now);
           const side = n % 2 === 0 ? "left" : "right";
           const content = getDayContent(n);
           return (
@@ -218,7 +251,7 @@ function Dashboard({
               isShooting={shootingDay === n}
               disabled={shootingDay !== null}
               onShoot={() => {
-                if (isDayUnlocked(n, now)) onShoot(n);
+                if (devBypass || isDayUnlocked(n, now)) onShoot(n);
               }}
             />
           );
