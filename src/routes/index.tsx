@@ -93,47 +93,128 @@ function Index() {
 }
 
 // ---------- Waiting Room (pre-launch overlay) ----------
+// ---------- Waiting Room (Ultra-Exciting Pre-Launch Experience) ----------
 function WaitingRoom({
   days, hours, minutes, seconds, onBypass,
 }: {
   days: number; hours: number; minutes: number; seconds: number; onBypass: () => void;
 }) {
   const timer = useRef<number | null>(null);
+  const [tapCount, setTapCount] = useState(0);
+  const [isShaking, setIsShaking] = useState(false);
+  const [playingTeaser, setPlayingTeaser] = useState(false);
+  const teaserAudioRef = useRef<HTMLAudioElement | null>(null);
+
   const start = () => { timer.current = window.setTimeout(onBypass, 2000); };
   const cancel = () => { if (timer.current) window.clearTimeout(timer.current); };
 
+  const handleHeartClick = () => {
+    playSuppressedShot();
+    setIsShaking(true);
+    setTapCount((c) => c + 1);
+    setTimeout(() => setIsShaking(false), 450);
+  };
+
+  const toggleTeaser = () => {
+    if (!teaserAudioRef.current) {
+      teaserAudioRef.current = new Audio("/media/day-01-voice.mp3");
+      teaserAudioRef.current.addEventListener("ended", () => setPlayingTeaser(false));
+    }
+    if (playingTeaser) {
+      teaserAudioRef.current.pause();
+      setPlayingTeaser(false);
+    } else {
+      teaserAudioRef.current.play().then(() => setPlayingTeaser(true)).catch(() => {
+        // fallback audio if not added yet
+        setPlayingTeaser(false);
+      });
+    }
+  };
+
+  // Dynamic security status message based on how many times she tried tapping the lock
+  const getTeaseMessage = () => {
+    if (tapCount === 0) return "🔒 Target Sealed · Awaiting Launch Countdown...";
+    if (tapCount === 1) return "⚠️ Security Alert: Unauthorized touch detected... nice try, Priyo! 😉";
+    if (tapCount === 2) return "🛡️ Still locked! The 30-Day Map won't open ahead of schedule.";
+    if (tapCount === 3) return "🎯 Impatience level rising... 3 shots fired at the lock!";
+    return `🔥 Okay, okay! Impatience Level: MAX (${tapCount} taps). Hold the heart for 2 seconds or click Dev Access below to peek!`;
+  };
+
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6 sm:px-6 sm:py-8 overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6 sm:px-6 sm:py-8 overflow-y-auto select-none"
       style={{
         background:
-          "radial-gradient(ellipse at 50% 30%, oklch(0.24 0.05 25 / 0.85), oklch(0.18 0.04 22 / 0.95))",
+          "radial-gradient(ellipse at 50% 30%, oklch(0.24 0.05 25 / 0.92), oklch(0.16 0.04 22 / 0.98))",
       }}
       role="dialog"
       aria-modal="true"
     >
-      <div className="glass-card animate-modal-in relative w-full max-w-md rounded-[2.2rem] px-5 py-8 sm:px-7 sm:py-10 text-center my-auto">
-        {/* Heart lock */}
-        <button
-          onMouseDown={start}
-          onMouseUp={cancel}
-          onMouseLeave={cancel}
-          onTouchStart={start}
-          onTouchEnd={cancel}
-          onClick={onBypass}
-          className="animate-float-soft group relative mx-auto mb-6 sm:mb-8 grid h-20 w-20 sm:h-22 sm:w-22 place-items-center rounded-full pearl-rose transition active:scale-95 cursor-pointer shadow-xl"
-          aria-label="Locked — click or hold for Dev Access"
-          title="Click or hold for Dev Access"
-        >
-          <Heart className="h-8 w-8 sm:h-9 sm:w-9 text-primary-foreground group-hover:scale-110 transition" strokeWidth={1.6} fill="currentColor" />
-          <span className="absolute -bottom-1 -right-1 grid h-7 w-7 place-items-center rounded-full bg-background/90 backdrop-blur border border-primary/40 shadow-sm">
-            <Lock className="h-3.5 w-3.5 text-primary" strokeWidth={2} />
-          </span>
-        </button>
+      {/* Floating Radar & Particle Background */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
+        <div className="h-[460px] w-[460px] rounded-full border border-dashed border-primary/20 animate-[spin_30s_linear_infinite] opacity-40" />
+        <div className="absolute h-[620px] w-[620px] rounded-full border border-primary/10 animate-[spin_45s_linear_infinite_reverse] opacity-30" />
+        <div className="absolute top-12 left-10 text-primary/30 animate-float-soft">
+          <Sparkles className="h-6 w-6" />
+        </div>
+        <div className="absolute bottom-16 right-12 text-primary/30 animate-float-soft" style={{ animationDelay: "1.5s" }}>
+          <Heart className="h-5 w-5" fill="currentColor" />
+        </div>
+        <div className="absolute top-1/4 right-8 text-primary/20 animate-pulse">
+          <Sparkles className="h-4 w-4" />
+        </div>
+      </div>
 
-        {/* Countdown */}
-        <p className="mb-3 text-[10px] uppercase tracking-[0.4em] text-muted-foreground font-medium">
-          Time until unlock
+      <div className="glass-card animate-modal-in relative w-full max-w-md rounded-[2.5rem] px-5 py-8 sm:px-7 sm:py-10 text-center my-auto border border-primary/40 shadow-[0_0_80px_rgba(244,114,182,0.22)] backdrop-blur-2xl">
+        {/* Top System Pill */}
+        <div className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/15 px-3.5 py-1 text-[9px] font-semibold uppercase tracking-[0.3em] text-primary mb-6 shadow-sm">
+          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+          Project 20 &middot; Armed &amp; Waiting
+        </div>
+
+        {/* Interactive Heart Lock (Tapping plays shot sound + shakes + increments counter!) */}
+        <div className="relative mx-auto mb-4 w-fit">
+          <button
+            type="button"
+            onMouseDown={start}
+            onMouseUp={cancel}
+            onMouseLeave={cancel}
+            onTouchStart={start}
+            onTouchEnd={cancel}
+            onClick={handleHeartClick}
+            className={
+              "group relative mx-auto grid h-22 w-22 sm:h-24 sm:w-24 place-items-center rounded-full pearl-rose transition duration-200 cursor-pointer shadow-[0_0_40px_rgba(244,114,182,0.5)] " +
+              (isShaking ? "animate-target-recoil scale-90" : "animate-float-soft hover:scale-105 active:scale-95")
+            }
+            aria-label="Locked — click to test aim, hold for Dev Access"
+            title="Tap to test aim, hold for Dev Access"
+          >
+            <div className="absolute inset-2 rounded-full border border-primary-foreground/30 pointer-events-none" />
+            <Heart className="h-10 w-10 sm:h-11 sm:w-11 text-primary-foreground group-hover:scale-110 transition animate-pulse" strokeWidth={1.4} fill="currentColor" />
+            <span className="absolute -bottom-1 -right-1 grid h-8 w-8 place-items-center rounded-full bg-background/95 backdrop-blur border border-primary/50 shadow-md transition group-hover:scale-110">
+              <Lock className="h-4 w-4 text-primary" strokeWidth={2} />
+            </span>
+          </button>
+
+          {/* Tap counter badge if tapped at least once */}
+          {tapCount > 0 && (
+            <span className="absolute -top-2 -left-2 grid h-6 min-w-[24px] px-1.5 place-items-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground shadow-lg animate-bounce">
+              {tapCount}x
+            </span>
+          )}
+        </div>
+
+        {/* Live Teasing Security Message */}
+        <div
+          onClick={handleHeartClick}
+          className="mx-auto mb-6 max-w-[320px] rounded-xl border border-primary/30 bg-primary/10 px-3.5 py-2 text-[11px] font-medium leading-tight text-primary transition active:scale-95 cursor-pointer shadow-sm"
+        >
+          {getTeaseMessage()}
+        </div>
+
+        {/* Shimmering Countdown */}
+        <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.4em] text-muted-foreground">
+          Time until target unlock
         </p>
         <div className="mb-6 sm:mb-8 grid grid-cols-4 gap-2 sm:gap-3">
           {[
@@ -142,8 +223,12 @@ function WaitingRoom({
             { v: minutes, l: "Min" },
             { v: seconds, l: "Sec" },
           ].map((u) => (
-            <div key={u.l} className="rounded-2xl border border-primary/20 bg-background/60 py-3 backdrop-blur shadow-sm">
-              <div className="display text-2xl sm:text-3xl font-medium tabular-nums text-espresso">
+            <div
+              key={u.l}
+              className="group relative overflow-hidden rounded-2xl border border-primary/30 bg-background/70 py-3.5 backdrop-blur shadow-md transition hover:border-primary hover:scale-105"
+            >
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/60 to-transparent opacity-60" />
+              <div className="display text-2xl sm:text-3xl font-medium tabular-nums text-espresso text-glow-rose">
                 {String(u.v).padStart(2, "0")}
               </div>
               <div className="mt-1 text-[8px] sm:text-[9px] uppercase tracking-[0.25em] text-muted-foreground font-semibold">
@@ -154,14 +239,14 @@ function WaitingRoom({
         </div>
 
         {/* Copy */}
-        <h1 className="display text-2xl font-semibold tracking-wide text-espresso text-glow-rose sm:text-3xl">
+        <h1 className="display text-2xl sm:text-3xl font-semibold tracking-wide text-espresso text-glow-rose">
           Target Locked
         </h1>
         <p className="mt-1.5 text-[10px] sm:text-[11px] uppercase tracking-[0.4em] text-primary font-semibold">
           Initiating &ldquo;Project 20&rdquo;
         </p>
 
-        <p className="serif mt-5 text-[15px] sm:text-[16px] leading-relaxed italic text-foreground/90 max-h-[32vh] overflow-y-auto px-1">
+        <p className="serif mt-4 text-[15px] sm:text-[16px] leading-relaxed italic text-foreground/90 max-h-[28vh] overflow-y-auto px-1">
           You didn&rsquo;t actually think I was just going to say
           &ldquo;Happy Birthday&rdquo; on August 14th and leave it at that,
           did you? You are stepping into your twenties, and a milestone like
@@ -174,7 +259,19 @@ function WaitingRoom({
           wait. The countdown to 20 is about to begin.
         </p>
 
-        <div className="mt-6 sm:mt-8 flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
+        {/* Optional Teaser Audio Button */}
+        <div className="mt-5 flex justify-center">
+          <button
+            type="button"
+            onClick={toggleTeaser}
+            className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-background/80 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-primary transition hover:bg-primary/20 active:scale-95 shadow-sm"
+          >
+            {playingTeaser ? <Pause className="h-3.5 w-3.5 animate-pulse" /> : <Play className="h-3.5 w-3.5" />}
+            {playingTeaser ? "Pause Teaser Audio" : "Play Briefing Teaser"}
+          </button>
+        </div>
+
+        <div className="mt-6 flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
           <span className="h-px w-8 bg-border" />
           Sealed with love
           <span className="h-px w-8 bg-border" />
@@ -185,7 +282,7 @@ function WaitingRoom({
           <button
             type="button"
             onClick={onBypass}
-            className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/15 px-4 py-2 sm:px-5 sm:py-2.5 text-[10px] font-semibold uppercase tracking-[0.25em] text-primary transition hover:bg-primary hover:text-primary-foreground active:scale-95 shadow-md"
+            className="inline-flex items-center gap-1.5 rounded-full border border-primary/50 bg-primary/20 px-4 py-2 sm:px-5 sm:py-2.5 text-[10px] font-bold uppercase tracking-[0.25em] text-primary transition hover:bg-primary hover:text-primary-foreground active:scale-95 shadow-lg"
           >
             ⚡ Dev Access (Unlock All)
           </button>
@@ -501,9 +598,200 @@ function Waypoint({
 }
 
 // ---------- Day Letter Modal ----------
+// ---------- Zero-Config Auto Media Frame ----------
+function AutoMediaFrame({ day, photoUrl }: { day: number; photoUrl?: string }) {
+  const pad = String(day).padStart(2, "0");
+  const candidates = useMemo(() => {
+    if (photoUrl) return [photoUrl];
+    return [
+      `/media/day-${pad}.jpg`,
+      `/media/day-${pad}.png`,
+      `/media/day-${pad}.mp4`,
+      `/media/day-${day}.jpg`,
+      `/media/day-${day}.png`,
+      `/media/day-${day}.mp4`,
+    ];
+  }, [day, photoUrl]);
+
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    setIndex(0);
+  }, [day, photoUrl]);
+
+  const current = candidates[index];
+  const isVideo = current ? /\.(mp4|webm|mov)$/i.test(current) : false;
+
+  if (!current || index >= candidates.length) {
+    return (
+      <div
+        className="flex h-full w-full items-center justify-center"
+        style={{
+          background:
+            "radial-gradient(120% 90% at 30% 20%, oklch(0.35 0.08 26), oklch(0.26 0.06 24) 60%, oklch(0.20 0.04 22))",
+        }}
+      >
+        <div className="text-center text-primary/90 px-4">
+          <Heart className="mx-auto h-7 w-7 text-primary animate-pulse" fill="currentColor" strokeWidth={0} />
+          <div className="display mt-3 text-2xl italic text-espresso">Memory Photo · Day {day}</div>
+          <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground mt-1.5 leading-relaxed">
+            Drop <span className="font-mono text-primary font-semibold">day-{pad}.jpg</span> or <span className="font-mono text-primary font-semibold">.mp4</span><br />in <span className="font-mono text-primary/80">public/media/</span>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isVideo) {
+    return (
+      <video
+        key={current}
+        src={current}
+        className="h-full w-full object-cover"
+        controls
+        autoPlay
+        loop
+        playsInline
+        onError={() => setIndex((i) => i + 1)}
+      />
+    );
+  }
+
+  return (
+    <img
+      key={current}
+      src={current}
+      alt={`Day ${day} memory`}
+      className="h-full w-full object-cover"
+      onError={() => setIndex((i) => i + 1)}
+    />
+  );
+}
+
+// ---------- Zero-Config Auto Audio Player ----------
+function AutoAudioPlayer({
+  day, voiceNoteUrl, voiceNoteDurationSec,
+}: {
+  day: number;
+  voiceNoteUrl?: string;
+  voiceNoteDurationSec?: number;
+}) {
+  const pad = String(day).padStart(2, "0");
+  const candidates = useMemo(() => {
+    if (voiceNoteUrl) return [voiceNoteUrl];
+    return [
+      `/media/day-${pad}-voice.mp3`,
+      `/media/day-${pad}-voice.m4a`,
+      `/media/day-${pad}-voice.wav`,
+      `/media/day-${day}-voice.mp3`,
+    ];
+  }, [day, voiceNoteUrl]);
+
+  const [index, setIndex] = useState(0);
+  const [availableUrl, setAvailableUrl] = useState<string | null>(null);
+  const [duration, setDuration] = useState<number>(voiceNoteDurationSec ?? 42);
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    setIndex(0);
+    setAvailableUrl(null);
+    setPlaying(false);
+  }, [day, voiceNoteUrl]);
+
+  useEffect(() => {
+    if (availableUrl || index >= candidates.length) return;
+    const testUrl = candidates[index];
+    const testAudio = new Audio(testUrl);
+    
+    const onLoaded = () => {
+      if (testAudio.duration && !isNaN(testAudio.duration) && testAudio.duration !== Infinity) {
+        setDuration(testAudio.duration);
+      } else if (voiceNoteDurationSec) {
+        setDuration(voiceNoteDurationSec);
+      }
+      setAvailableUrl(testUrl);
+    };
+    const onError = () => {
+      setIndex((i) => i + 1);
+    };
+
+    testAudio.addEventListener("loadedmetadata", onLoaded);
+    testAudio.addEventListener("canplaythrough", onLoaded);
+    testAudio.addEventListener("error", onError);
+    testAudio.load();
+
+    return () => {
+      testAudio.removeEventListener("loadedmetadata", onLoaded);
+      testAudio.removeEventListener("canplaythrough", onLoaded);
+      testAudio.removeEventListener("error", onError);
+    };
+  }, [index, candidates, availableUrl, voiceNoteDurationSec]);
+
+  useEffect(() => {
+    if (!availableUrl) return;
+    audioRef.current = new Audio(availableUrl);
+    const audio = audioRef.current;
+    const updateTime = () => {
+      if (audio.duration && !isNaN(audio.duration)) {
+        setProgress((audio.currentTime / audio.duration) * 100);
+      }
+    };
+    const onEnded = () => setPlaying(false);
+    audio.addEventListener("timeupdate", updateTime);
+    audio.addEventListener("ended", onEnded);
+    return () => {
+      audio.pause();
+      audio.removeEventListener("timeupdate", updateTime);
+      audio.removeEventListener("ended", onEnded);
+    };
+  }, [availableUrl]);
+
+  const togglePlay = () => {
+    if (!availableUrl || !audioRef.current) return;
+    if (playing) {
+      audioRef.current.pause();
+      setPlaying(false);
+    } else {
+      audioRef.current.play().catch(() => {});
+      setPlaying(true);
+    }
+  };
+
+  if (!availableUrl) return null;
+
+  return (
+    <div className="mx-6 mt-4 sm:mx-7 flex items-center gap-3.5 rounded-2xl border border-primary/30 bg-background/60 p-3.5 backdrop-blur shadow-sm">
+      <button
+        type="button"
+        onClick={togglePlay}
+        className="grid h-12 w-12 shrink-0 place-items-center rounded-full pearl-rose text-primary-foreground transition hover:brightness-105 active:scale-90 shadow-md"
+        aria-label={playing ? "Pause" : "Play"}
+      >
+        {playing ? <Pause className="h-5 w-5" /> : <Play className="ml-0.5 h-5 w-5" />}
+      </button>
+      <div className="min-w-0 flex-1">
+        <div className="mb-1.5 flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-primary">
+          <span className="truncate">Voice note message</span>
+          <span className="tabular-nums font-mono">
+            {fmt((progress / 100) * duration)} / {fmt(duration)}
+          </span>
+        </div>
+        <div className="h-2 w-full overflow-hidden rounded-full bg-border/80">
+          <div
+            className="h-full rounded-full bg-primary transition-[width]"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------- Day Letter Modal ----------
 function DayModal({ day, onClose }: { day: number; onClose: () => void }) {
   const content = getDayContent(day);
-  const voiceDurationSec = content?.voiceNoteDurationSec ?? 42;
   const hasAudio = Boolean(content?.voiceNoteUrl || content?.voiceNoteDurationSec);
 
   useEffect(() => {
@@ -517,14 +805,6 @@ function DayModal({ day, onClose }: { day: number; onClose: () => void }) {
       document.body.style.overflow = "";
     };
   }, [onClose]);
-
-  const [playing, setPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-  useEffect(() => {
-    if (!playing) return;
-    const id = setInterval(() => setProgress((p) => (p >= 100 ? 0 : p + 0.7)), 100);
-    return () => clearInterval(id);
-  }, [playing]);
 
   return (
     <div
@@ -569,56 +849,14 @@ function DayModal({ day, onClose }: { day: number; onClose: () => void }) {
           className="mx-6 mt-4 sm:mx-7 overflow-hidden rounded-2xl shadow-[0_20px_40px_-24px_oklch(0.1_0.05_20/0.8)] border border-primary/25"
           style={{ aspectRatio: "4 / 5" }}
         >
-          {content?.photoUrl ? (
-            <img
-              src={content.photoUrl}
-              alt={`Day ${day} memory`}
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <div
-              className="flex h-full w-full items-center justify-center"
-              style={{
-                background:
-                  "radial-gradient(120% 90% at 30% 20%, oklch(0.35 0.08 26), oklch(0.26 0.06 24) 60%, oklch(0.20 0.04 22))",
-              }}
-            >
-              <div className="text-center text-primary/90 px-4">
-                <Heart className="mx-auto h-7 w-7 text-primary animate-pulse" fill="currentColor" strokeWidth={0} />
-                <div className="display mt-3 text-2xl italic text-espresso">Memory Photo · Day {day}</div>
-                <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground mt-1">
-                  Reserved for your photo
-                </p>
-              </div>
-            </div>
-          )}
+          <AutoMediaFrame day={day} photoUrl={content?.photoUrl} />
         </div>
 
-        {hasAudio && (
-          <div className="mx-6 mt-4 sm:mx-7 flex items-center gap-3.5 rounded-2xl border border-primary/30 bg-background/60 p-3.5 backdrop-blur shadow-sm">
-            <button
-              onClick={() => setPlaying((p) => !p)}
-              className="grid h-12 w-12 shrink-0 place-items-center rounded-full pearl-rose text-primary-foreground transition hover:brightness-105 active:scale-90 shadow-md"
-              aria-label={playing ? "Pause" : "Play"}
-            >
-              {playing ? <Pause className="h-5 w-5" /> : <Play className="ml-0.5 h-5 w-5" />}
-            </button>
-            <div className="min-w-0 flex-1">
-              <div className="mb-1.5 flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-primary">
-                <span className="truncate">Voice note reminder</span>
-                <span className="tabular-nums font-mono">
-                  {fmt((progress / 100) * voiceDurationSec)} / {fmt(voiceDurationSec)}
-                </span>
-              </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-border/80">
-                <div
-                  className="h-full rounded-full bg-primary transition-[width]"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-            </div>
-          </div>
-        )}
+        <AutoAudioPlayer
+          day={day}
+          voiceNoteUrl={content?.voiceNoteUrl}
+          voiceNoteDurationSec={content?.voiceNoteDurationSec}
+        />
 
         <div className={"mx-6 mb-7 sm:mx-7 " + (hasAudio ? "mt-4" : "mt-5")}>
           <div className="mb-4 flex items-center gap-2 text-[10px] uppercase tracking-[0.35em] text-muted-foreground font-medium">
