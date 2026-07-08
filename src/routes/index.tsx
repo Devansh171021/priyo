@@ -102,8 +102,6 @@ function WaitingRoom({
   const timer = useRef<number | null>(null);
   const [tapCount, setTapCount] = useState(0);
   const [isShaking, setIsShaking] = useState(false);
-  const [playingTeaser, setPlayingTeaser] = useState(false);
-  const teaserAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const start = () => { timer.current = window.setTimeout(onBypass, 2000); };
   const cancel = () => { if (timer.current) window.clearTimeout(timer.current); };
@@ -113,31 +111,6 @@ function WaitingRoom({
     setIsShaking(true);
     setTapCount((c) => c + 1);
     setTimeout(() => setIsShaking(false), 450);
-  };
-
-  const toggleTeaser = () => {
-    if (!teaserAudioRef.current) {
-      teaserAudioRef.current = new Audio("/media/day-01-voice.mp3");
-      teaserAudioRef.current.addEventListener("ended", () => setPlayingTeaser(false));
-    }
-    if (playingTeaser) {
-      teaserAudioRef.current.pause();
-      setPlayingTeaser(false);
-    } else {
-      teaserAudioRef.current.play().then(() => setPlayingTeaser(true)).catch(() => {
-        // fallback audio if not added yet
-        setPlayingTeaser(false);
-      });
-    }
-  };
-
-  // Dynamic security status message based on how many times she tried tapping the lock
-  const getTeaseMessage = () => {
-    if (tapCount === 0) return "🔒 Target Sealed · Awaiting Launch Countdown...";
-    if (tapCount === 1) return "⚠️ Security Alert: Unauthorized touch detected... nice try, Priyo! 😉";
-    if (tapCount === 2) return "🛡️ Still locked! The 30-Day Map won't open ahead of schedule.";
-    if (tapCount === 3) return "🎯 Impatience level rising... 3 shots fired at the lock!";
-    return `🔥 Okay, okay! Impatience Level: MAX (${tapCount} taps). Hold the heart for 2 seconds or click Dev Access below to peek!`;
   };
 
   return (
@@ -167,13 +140,13 @@ function WaitingRoom({
 
       <div className="glass-card animate-modal-in relative w-full max-w-md rounded-[2.5rem] px-5 py-8 sm:px-7 sm:py-10 text-center my-auto border border-primary/40 shadow-[0_0_80px_rgba(244,114,182,0.22)] backdrop-blur-2xl">
         {/* Top System Pill */}
-        <div className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/15 px-3.5 py-1 text-[9px] font-semibold uppercase tracking-[0.3em] text-primary mb-6 shadow-sm">
+        <div className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/15 px-3.5 py-1 text-[9px] font-semibold uppercase tracking-[0.3em] text-primary mb-6 sm:mb-8 shadow-sm">
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-          Project 20 &middot; Armed &amp; Waiting
+          Project Anmona &middot; Armed &amp; Waiting
         </div>
 
         {/* Interactive Heart Lock (Tapping plays shot sound + shakes + increments counter!) */}
-        <div className="relative mx-auto mb-4 w-fit">
+        <div className="relative mx-auto mb-6 sm:mb-8 w-fit">
           <button
             type="button"
             onMouseDown={start}
@@ -202,14 +175,6 @@ function WaitingRoom({
               {tapCount}x
             </span>
           )}
-        </div>
-
-        {/* Live Teasing Security Message */}
-        <div
-          onClick={handleHeartClick}
-          className="mx-auto mb-6 max-w-[320px] rounded-xl border border-primary/30 bg-primary/10 px-3.5 py-2 text-[11px] font-medium leading-tight text-primary transition active:scale-95 cursor-pointer shadow-sm"
-        >
-          {getTeaseMessage()}
         </div>
 
         {/* Shimmering Countdown */}
@@ -243,7 +208,7 @@ function WaitingRoom({
           Target Locked
         </h1>
         <p className="mt-1.5 text-[10px] sm:text-[11px] uppercase tracking-[0.4em] text-primary font-semibold">
-          Initiating &ldquo;Project 20&rdquo;
+          Initiating &ldquo;Project Anmona&rdquo;
         </p>
 
         <p className="serif mt-4 text-[15px] sm:text-[16px] leading-relaxed italic text-foreground/90 max-h-[28vh] overflow-y-auto px-1">
@@ -258,18 +223,6 @@ function WaitingRoom({
           zero. Save this link to your home screen, get comfortable, and
           wait. The countdown to 20 is about to begin.
         </p>
-
-        {/* Optional Teaser Audio Button */}
-        <div className="mt-5 flex justify-center">
-          <button
-            type="button"
-            onClick={toggleTeaser}
-            className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-background/80 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-primary transition hover:bg-primary/20 active:scale-95 shadow-sm"
-          >
-            {playingTeaser ? <Pause className="h-3.5 w-3.5 animate-pulse" /> : <Play className="h-3.5 w-3.5" />}
-            {playingTeaser ? "Pause Teaser Audio" : "Play Briefing Teaser"}
-          </button>
-        </div>
 
         <div className="mt-6 flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
           <span className="h-px w-8 bg-border" />
@@ -442,22 +395,23 @@ function Dashboard({
 
       <header className="mb-8 sm:mb-10 text-center px-2">
         <p className="text-[10px] uppercase tracking-[0.4em] text-primary font-semibold">
-          Project 20 &middot; Day Map
+          Project Anmona &middot; Day Map
         </p>
         <h2 className="display mt-2 sm:mt-3 text-3xl sm:text-4xl font-medium italic text-espresso text-glow-rose">
           The Journey Home
         </h2>
         <div className="mt-2.5 sm:mt-3 flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-medium">
-          <MapPin className="h-3 w-3 text-primary" /> {END_CITY}
-          <span className="opacity-40">&larr;</span> {START_CITY}
+          <MapPin className="h-3 w-3 text-primary" /> {START_CITY}
+          <span className="opacity-40">&rarr;</span> {END_CITY}
         </div>
       </header>
 
-      <CityMarker name={END_CITY} tone="end" />
+      <CityMarker name={START_CITY} tone="start" />
 
       <ol className="relative mx-auto mt-4 w-full">
+        {/* Main Vertical Dotted Spine */}
         <div className="timeline-dotted pointer-events-none absolute left-1/2 top-0 h-full w-[2px] -translate-x-1/2" />
-        {nodes.slice().reverse().map((n) => {
+        {nodes.map((n) => {
           const state = devBypass ? "completed" : getNodeState(n, now);
           const side = n % 2 === 0 ? "left" : "right";
           const content = getDayContent(n);
@@ -478,7 +432,7 @@ function Dashboard({
         })}
       </ol>
 
-      <CityMarker name={START_CITY} tone="start" />
+      <CityMarker name={END_CITY} tone="end" />
     </div>
   );
 }
@@ -514,8 +468,24 @@ function Waypoint({
 }) {
   const isUnlocked = state !== "locked";
   const isLeft = side === "left";
+  const isCurrent = state === "current";
+
   return (
-    <li className="relative grid grid-cols-2 items-center py-4 sm:py-5">
+    <li
+      className={
+        "relative grid grid-cols-2 items-center py-4 sm:py-5 transition-opacity duration-500 " +
+        (!isUnlocked ? "opacity-30 hover:opacity-45" : "opacity-100")
+      }
+    >
+      {/* Thin Horizontal Spine Connector Line connecting center target to vertical spine */}
+      <div
+        className={
+          "pointer-events-none absolute top-1/2 h-[1px] -translate-y-1/2 w-8 sm:w-10 border-t border-dashed transition-colors duration-300 " +
+          (isLeft ? "left-1/2 border-primary/40" : "right-1/2 border-primary/40") +
+          (isCurrent ? " !border-primary border-solid shadow-[0_0_8px_rgba(244,114,182,0.8)]" : "")
+        }
+      />
+
       <div className={isLeft ? "col-start-1 pr-6 sm:pr-8 text-right" : "col-start-2 pl-6 sm:pl-8 text-left"}>
         <div className="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-medium">
           Day
@@ -524,9 +494,9 @@ function Waypoint({
           className={
             "display text-3xl sm:text-4xl font-medium italic transition duration-300 " +
             (state === "locked"
-              ? "text-espresso/35"
-              : state === "current"
-              ? "text-primary text-glow-rose"
+              ? "text-espresso/40"
+              : isCurrent
+              ? "text-primary text-glow-rose font-bold sm:scale-105 inline-block"
               : "text-espresso")
           }
         >
@@ -538,8 +508,8 @@ function Waypoint({
               "mt-1 text-[10px] sm:text-[11px] font-semibold tracking-[0.06em] line-clamp-1 " +
               (state === "locked"
                 ? "text-muted-foreground/50"
-                : state === "current"
-                ? "text-primary"
+                : isCurrent
+                ? "text-primary font-bold"
                 : "text-muted-foreground/90")
             }
           >
@@ -548,7 +518,15 @@ function Waypoint({
         )}
       </div>
 
-      <div className={isLeft ? "col-start-2 pl-6 sm:pl-8" : "col-start-1 pr-6 sm:pr-8 flex justify-end"}>
+      <div className={isLeft ? "col-start-2 pl-6 sm:pl-8 relative flex items-center" : "col-start-1 pr-6 sm:pr-8 relative flex justify-end items-center"}>
+        {/* Continuous Slow Pulsing Ring for Current Active Day */}
+        {isCurrent && (
+          <span
+            className="pointer-events-none absolute h-20 w-20 sm:h-22 sm:w-22 rounded-full border-2 border-primary/50 animate-ping opacity-60"
+            style={{ animationDuration: "2.8s" }}
+          />
+        )}
+
         <button
           type="button"
           disabled={disabled || !isUnlocked}
@@ -558,9 +536,9 @@ function Waypoint({
             "group relative grid h-13 w-13 sm:h-14 sm:w-14 place-items-center rounded-full transition-all duration-300 " +
             (isShooting ? "animate-target-recoil scale-90 " : "") +
             (!isUnlocked
-              ? "cursor-not-allowed border border-border/60 bg-background/60 text-muted-foreground/40"
-              : state === "current"
-              ? "pearl-rose animate-pulse-rose cursor-pointer hover:scale-105 active:scale-90 shadow-xl"
+              ? "cursor-not-allowed border border-border/50 bg-background/40 text-muted-foreground/30"
+              : isCurrent
+              ? "pearl-rose animate-pulse cursor-pointer scale-105 hover:scale-110 active:scale-95 shadow-[0_0_30px_rgba(244,114,182,0.8)] border-2 border-primary"
               : "pearl cursor-pointer hover:scale-105 active:scale-90 shadow-md border border-primary/30")
           }
         >
@@ -568,15 +546,15 @@ function Waypoint({
             className={
               "pointer-events-none absolute inset-1.5 rounded-full border transition " +
               (!isUnlocked
-                ? "border-border/40"
-                : state === "current"
-                ? "border-primary-foreground/30"
+                ? "border-border/30"
+                : isCurrent
+                ? "border-primary-foreground/40 animate-pulse"
                 : "border-primary/20 group-hover:border-primary/40")
             }
           />
 
           {!isUnlocked ? (
-            <Lock className="h-4 w-4 sm:h-4.5 sm:w-4.5 opacity-60" />
+            <Lock className="h-4 w-4 sm:h-4.5 sm:w-4.5 opacity-50" />
           ) : isShooting ? (
             <span className="animate-bullet-hole text-primary-foreground">
               <Sparkles className="h-5 w-5 animate-pulse" />
@@ -585,7 +563,7 @@ function Waypoint({
             <Target
               className={
                 "h-5 w-5 sm:h-5.5 sm:w-5.5 transition duration-300 group-hover:scale-110 " +
-                (state === "current" ? "text-primary-foreground" : "text-primary")
+                (isCurrent ? "text-primary-foreground animate-bounce" : "text-primary")
               }
             />
           )}
@@ -875,7 +853,7 @@ function DayModal({ day, onClose }: { day: number; onClose: () => void }) {
                 "This day has not unlocked yet. Check back when the timer reaches midnight IST."}
             </p>
             <p className="serif mt-6 text-right text-[17px] italic text-primary font-medium">
-              &mdash; yours,
+              &mdash; yours, D
             </p>
           </div>
         </div>

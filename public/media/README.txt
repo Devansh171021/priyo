@@ -1,5 +1,5 @@
 ================================================================================
-  PROJECT 20 — AUTOMATIC MEDIA DIRECTORY (DRAG & DROP YOUR MEMORIES HERE)
+  PROJECT ANMONA — AUTOMATIC MEDIA DIRECTORY (DRAG & DROP YOUR MEMORIES HERE)
 ================================================================================
 
 You do NOT need to edit any code or days.ts to add pictures, GIFs, videos, or voice notes!
