@@ -606,9 +606,11 @@ function AutoMediaFrame({ day, photoUrl }: { day: number; photoUrl?: string }) {
     return [
       `/media/day-${pad}.jpg`,
       `/media/day-${pad}.png`,
+      `/media/day-${pad}.gif`,
       `/media/day-${pad}.mp4`,
       `/media/day-${day}.jpg`,
       `/media/day-${day}.png`,
+      `/media/day-${day}.gif`,
       `/media/day-${day}.mp4`,
     ];
   }, [day, photoUrl]);
@@ -635,7 +637,7 @@ function AutoMediaFrame({ day, photoUrl }: { day: number; photoUrl?: string }) {
           <Heart className="mx-auto h-7 w-7 text-primary animate-pulse" fill="currentColor" strokeWidth={0} />
           <div className="display mt-3 text-2xl italic text-espresso">Memory Photo · Day {day}</div>
           <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground mt-1.5 leading-relaxed">
-            Drop <span className="font-mono text-primary font-semibold">day-{pad}.jpg</span> or <span className="font-mono text-primary font-semibold">.mp4</span><br />in <span className="font-mono text-primary/80">public/media/</span>
+            Drop <span className="font-mono text-primary font-semibold">day-{pad}.jpg/.gif/.mp4</span><br />in <span className="font-mono text-primary/80">public/media/</span>
           </p>
         </div>
       </div>
