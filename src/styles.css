@@ -42,36 +42,36 @@
 :root {
   --radius: 1rem;
 
-  /* Warm cream / ivory canvas */
-  --background: oklch(0.983 0.012 80);          /* warm ivory */
-  --paper: oklch(0.975 0.018 78);               /* letter paper */
-  --ivory: oklch(0.97 0.02 78);
-  --foreground: oklch(0.32 0.03 40);            /* warm espresso */
-  --espresso: oklch(0.28 0.035 40);
+  /* Moody romantic evening / velvety cocoa-rose night */
+  --background: oklch(0.20 0.035 24);         /* dark velvet cocoa night */
+  --paper: oklch(0.24 0.04 26);               /* dark romantic parchment */
+  --ivory: oklch(0.26 0.042 26);
+  --foreground: oklch(0.94 0.02 65);          /* warm pearl cream */
+  --espresso: oklch(0.96 0.025 70);           /* glowing pearl champagne */
 
-  --card: oklch(0.985 0.015 80);
-  --card-foreground: oklch(0.32 0.03 40);
-  --popover: oklch(0.985 0.015 80);
-  --popover-foreground: oklch(0.32 0.03 40);
+  --card: oklch(0.23 0.038 25);
+  --card-foreground: oklch(0.94 0.02 65);
+  --popover: oklch(0.23 0.038 25);
+  --popover-foreground: oklch(0.94 0.02 65);
 
-  /* Rose gold accent */
-  --primary: oklch(0.72 0.09 40);               /* muted rose gold */
-  --primary-foreground: oklch(0.99 0.01 80);
-  --rose: oklch(0.72 0.09 40);
-  --rose-soft: oklch(0.86 0.05 40);
-  --champagne: oklch(0.88 0.045 80);
+  /* Glowing romantic rose gold / ruby accent */
+  --primary: oklch(0.76 0.14 26);             /* radiant rose gold */
+  --primary-foreground: oklch(0.18 0.03 24);
+  --rose: oklch(0.76 0.14 26);
+  --rose-soft: oklch(0.88 0.08 28);
+  --champagne: oklch(0.92 0.045 75);
 
-  --secondary: oklch(0.94 0.02 75);
-  --secondary-foreground: oklch(0.32 0.03 40);
-  --muted: oklch(0.94 0.018 75);
-  --muted-foreground: oklch(0.48 0.03 45);
-  --accent: oklch(0.72 0.09 40);
-  --accent-foreground: oklch(0.99 0.01 80);
-  --destructive: oklch(0.62 0.18 25);
+  --secondary: oklch(0.28 0.04 26);
+  --secondary-foreground: oklch(0.94 0.02 65);
+  --muted: oklch(0.27 0.038 25);
+  --muted-foreground: oklch(0.72 0.04 55);
+  --accent: oklch(0.76 0.14 26);
+  --accent-foreground: oklch(0.18 0.03 24);
+  --destructive: oklch(0.65 0.20 25);
 
-  --border: oklch(0.9 0.02 70);
-  --input: oklch(0.92 0.02 75);
-  --ring: oklch(0.72 0.09 40);
+  --border: oklch(0.35 0.05 26);
+  --input: oklch(0.30 0.045 26);
+  --ring: oklch(0.76 0.14 26);
 }
 
 @layer base {
@@ -81,48 +81,50 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     background-image:
-      radial-gradient(1000px 600px at 15% -10%, oklch(0.94 0.04 40 / 0.55), transparent 60%),
-      radial-gradient(900px 600px at 100% 100%, oklch(0.93 0.05 80 / 0.5), transparent 60%);
+      radial-gradient(1100px 700px at 15% -10%, oklch(0.35 0.09 25 / 0.45), transparent 65%),
+      radial-gradient(900px 600px at 100% 100%, oklch(0.30 0.08 32 / 0.4), transparent 65%);
     background-attachment: fixed;
   }
 }
 
 /* ---- utilities ---- */
 @utility text-glow-rose {
-  text-shadow: 0 1px 0 oklch(1 0 0 / 0.5), 0 0 24px oklch(0.72 0.09 40 / 0.25);
+  text-shadow: 0 1px 0 oklch(1 0 0 / 0.3), 0 0 24px oklch(0.76 0.14 26 / 0.5);
 }
 @utility glass-card {
-  background: oklch(1 0 0 / 0.55);
-  backdrop-filter: blur(24px) saturate(140%);
-  border: 1px solid oklch(1 0 0 / 0.65);
+  background: oklch(0.24 0.04 26 / 0.82);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid oklch(0.76 0.14 26 / 0.3);
   box-shadow:
-    0 1px 0 oklch(1 0 0 / 0.9) inset,
-    0 30px 60px -30px oklch(0.5 0.05 40 / 0.25),
-    0 10px 30px -15px oklch(0.72 0.09 40 / 0.25);
+    0 1px 0 oklch(1 0 0 / 0.15) inset,
+    0 30px 60px -30px oklch(0.1 0.05 20 / 0.85),
+    0 10px 30px -15px oklch(0.76 0.14 26 / 0.35);
 }
 @utility paper-card {
   background:
-    radial-gradient(120% 120% at 0% 0%, oklch(0.99 0.015 80), oklch(0.96 0.025 78) 60%, oklch(0.94 0.03 75));
+    radial-gradient(120% 120% at 0% 0%, oklch(0.28 0.045 26), oklch(0.23 0.038 24) 60%, oklch(0.19 0.03 22));
+  border: 1px solid oklch(0.76 0.14 26 / 0.25);
   box-shadow:
-    0 1px 0 oklch(1 0 0 / 0.9) inset,
-    0 40px 80px -40px oklch(0.4 0.06 40 / 0.25),
-    0 20px 40px -20px oklch(0.7 0.08 40 / 0.18);
+    0 1px 0 oklch(1 0 0 / 0.12) inset,
+    0 40px 80px -40px oklch(0.1 0.06 20 / 0.95),
+    0 20px 40px -20px oklch(0.76 0.14 26 / 0.3);
 }
 @utility pearl {
   background:
-    radial-gradient(circle at 30% 25%, oklch(1 0 0 / 0.95), oklch(0.96 0.02 80 / 0.9) 40%, oklch(0.9 0.03 75) 100%);
+    radial-gradient(circle at 30% 25%, oklch(0.40 0.06 26 / 0.95), oklch(0.28 0.045 24 / 0.9) 40%, oklch(0.22 0.035 22) 100%);
+  border: 1px solid oklch(0.76 0.14 26 / 0.35);
   box-shadow:
-    0 1px 2px oklch(1 0 0 / 0.9) inset,
-    0 -1px 2px oklch(0.7 0.05 40 / 0.15) inset,
-    0 6px 14px -6px oklch(0.5 0.05 40 / 0.25);
+    0 1px 2px oklch(1 0 0 / 0.25) inset,
+    0 -1px 2px oklch(0.1 0.05 20 / 0.6) inset,
+    0 6px 14px -6px oklch(0.1 0.05 20 / 0.7);
 }
 @utility pearl-rose {
   background:
-    radial-gradient(circle at 30% 25%, oklch(1 0 0 / 0.95), oklch(0.86 0.06 40 / 0.95) 45%, oklch(0.72 0.09 40) 100%);
+    radial-gradient(circle at 30% 25%, oklch(0.92 0.1 28), oklch(0.76 0.14 26) 45%, oklch(0.62 0.15 22) 100%);
   box-shadow:
-    0 1px 2px oklch(1 0 0 / 0.9) inset,
-    0 0 0 4px oklch(0.72 0.09 40 / 0.15),
-    0 0 24px oklch(0.72 0.09 40 / 0.45);
+    0 1px 2px oklch(1 0 0 / 0.6) inset,
+    0 0 0 4px oklch(0.76 0.14 26 / 0.3),
+    0 0 28px oklch(0.76 0.14 26 / 0.75);
 }
 
 @keyframes pulse-rose {
