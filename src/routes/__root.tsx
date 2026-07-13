@@ -78,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Project Anmona — The Countdown" },
-      { name: "description", content: "A 30-day countdown to a milestone. Target locked." },
+      { name: "description", content: "A 32-day countdown to a milestone. Target locked." },
       { name: "theme-color", content: "#0a0a10" },
       { property: "og:title", content: "Project Anmona — The Countdown" },
       { property: "og:description", content: "Target locked. The countdown begins." },

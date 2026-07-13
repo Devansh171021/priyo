@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
 export const IST_TIMEZONE = "Asia/Kolkata";
-export const TOTAL_DAYS = 30;
+export const TOTAL_DAYS = 32;
 
-/** Day 1 launch: July 16, 2026 at 00:00:00 IST */
-export const LAUNCH_TARGET_MS = Date.parse("2026-07-16T00:00:00+05:30");
+/** Day 1 launch: July 14, 2026 at 00:00:00 IST */
+export const LAUNCH_TARGET_MS = Date.parse("2026-07-14T00:00:00+05:30");
 
 /** Unlock instant for a timeline day (1–30), always 00:00:00 IST on that calendar day. */
 export function getDayUnlockTimestamp(day: number): number {

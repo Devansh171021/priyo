@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, X, Play, Pause, MapPin, Heart, Lock, Target, Sparkles } from "lucide-react";
 import { END_CITY, getDayContent, START_CITY, type DayContent } from "@/data/days";
 import { playSuppressedShot } from "@/lib/shotSound";
+import { ResponseBox } from "@/components/ResponseBox";
 import {
   getCountdownParts,
   getNodeState,
@@ -236,7 +237,7 @@ function WaitingRoom({
             that requires a proper buildup.
           </p>
           <p>
-            Hidden behind this screen is a 30-day map. 30 days of memories,
+            Hidden behind this screen is a 32-day map. 32 days of memories,
             truths, and exactly why you are the best part of my life. But you
             are impatient, and I know you&rsquo;re already trying to figure out
             how to bypass this lock.
@@ -394,7 +395,7 @@ function Dashboard({
         <div className="fixed top-3 right-3 sm:top-4 sm:right-4 z-40 flex items-center gap-2 rounded-full border border-primary/50 bg-background/95 px-3.5 py-1.5 shadow-xl backdrop-blur">
           <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-primary">
-            Dev Mode: All 30 Unlocked
+            Dev Mode: All 32 Unlocked
           </span>
           <button
             onClick={onExitDev}
@@ -874,6 +875,7 @@ function DayModal({ day, onClose }: { day: number; onClose: () => void }) {
               &mdash; yours, D
             </p>
           </div>
+          <ResponseBox />
         </div>
       </div>
     </div>
