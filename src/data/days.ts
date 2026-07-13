@@ -164,7 +164,7 @@ export const DAYS: DayContent[] = [
     day: 17,
     target: "Target 17: Zero Friction",
     title: "Day 17: Zero Friction",
-    photoUrl: "/assets/friction.jpg",
+    photoUrl: "/media/day-17-friction.jpg",
     letter:
       "I spend hours analyzing complex systems—how gears lock together perfectly, how energy shifts and balances under intense pressure. But honestly, no textbook explains how we work so effortlessly.\n\n" +
       "You are the one constant variable in my life that always makes complete sense. Even when the stress of classes and daily chaos hits a boiling point, you are the grounding force that keeps my head clear. Finding someone whose mind just seamlessly clicks with yours is rare. With us, there is zero friction.",
@@ -262,7 +262,7 @@ export const DAYS: DayContent[] = [
     day: 28,
     target: "Target 28: The Blueprint",
     title: "Day 28: The Blueprint",
-    photoUrl: "/assets/blueprint.jpg",
+    photoUrl: "/media/day-28-blueprint.jpg",
     letter:
       "I’ve been sketching out these intricate, clockwork-style systems lately, and it got me thinking about time. We are literally days away from your twenties now. \n\n" +
       "The blueprint for your next decade is completely wide open. Whatever you decide to build next, and whatever massive goals you set your sights on, just know I’m going to be right there in your corner watching you execute it perfectly. The countdown on this app is almost over, but your next era is just getting started.",
