@@ -228,7 +228,7 @@ export const DAYS: DayContent[] = [
     photoUrl: "/media/day-23.mp4",
     letter:
       "Traveling back to Kolkata for this summer break, I don't think I have ever been more impatient in my life. The entire trip back from Pondi, all I could think about was finally seeing you again, giving you those sketches I made for you, and just pulling you into my arms.\n\n" +
-      "I missed you like absolute hell. Finally getting to hold you and feel that exact same warmth I’ve been craving was everything. And honestly? I don't even know how to properly explain it, but I am absolutely obsessed with how you smell every time I hug you. Just being back and getting to see you this regularly again is easily the best part of my break. I am soaking up every single second of having you this close.",
+      "I missed you like absolute hell. Finally getting to hold you and feel that exact same warmth I’ve been craving was everything. And honestly? I don't even know how to properly explain it, but I am absolutely obsessed with how you smell every time I hug you. it really doesnt matter if u are sweaty or freshly showered, i just love how you smell in every way. Just being back and getting to see you this regularly again is easily the best part of my break. I am soaking up every single second of having you this close.",
   },
   {
     day: 25,
