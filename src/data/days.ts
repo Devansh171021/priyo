@@ -111,8 +111,9 @@ export const DAYS: DayContent[] = [
     title: "Day 11: Curves and Confidence",
     photoUrl: "/media/day-11.jpg",
     letter:
-      "I know I tease you and make sexual jokes just to annoy you, but the reality is I am insanely attracted to you.\n\n" +
-      "You are just so incredibly beautiful that literally anything you put on, you look absolutely gorgeous in it. There is this undeniable way that every single piece of clothing just fits your body perfectly and shapes your curves. It doesn't matter what we are doing or where we are going, half the time I’m just quietly looking at you, completely admiring you. It drives me crazy in the best way possible. You have this effortless, sexy confidence that hooks me every single time.",
+      "I know I constantly tease you and throw around those jokes just to get a reaction out of you, but honestly, half the time it's just a defense mechanism because I don't want you to catch me staring. The absolute truth is that I am insanely, hopelessly attracted to you, and you are so breathtakingly beautiful that it genuinely distracts me.
+"It doesn’t matter if you’re dressed up to go out or just wearing something completely casual, literally anything you put on looks absolutely gorgeous on you. There is this undeniable way that every single piece of clothing just perfectly traces your body. I am absolutely obsessed with your curves and the way everything you wear just seems to wrap perfectly around you, highlighting your shape in a way that drives me completely out of my mind."
+"I don't even think you realize the effect you have on me. Half the time we are hanging out or on a call, no matter what we’re doing or where we are going, I am just quietly watching you. I catch myself completely mesmerized by the way you move and the way you carry yourself. You have this effortless, magnetic, intensely sexy confidence that you don't even have to try to turn on. It just radiates off of you. It hooks me every single time I look at you. It is maddening in the absolute best way possible, and I just need you to know, without the jokes or the teasing, exactly how stunning and incredibly sexy I think you are."",
   },
   {
     day: 12,
