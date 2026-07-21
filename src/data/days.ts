@@ -93,7 +93,7 @@ export const DAYS: DayContent[] = [
     photoUrl: "/media/day-09.jpg",
     letter:
       "We both know exactly what it takes to compete at a high level and the kind of mental grind it demands. But watching your journey as a shooter is something else entirely.\n\n" +
-      "From dominating in Khelo India to the nationals, you always bring your absolute best. I know how agonizing it is to go through 4 Indian trials and narrowly miss that top 2 spot for the national team. But what makes me so unbelievably proud of you is that you don't break. Even when you fall short, you push that extra mile. Your resilience and your work ethic inspire me more than you know. To me, you are always the absolute best.",
+      "From dominating in Khelo India to the nationals, you always bring your absolute best. I know how agonizing it is to go through 5 national trials and narrowly miss that top 2 spot for the national team. But what makes me so unbelievably proud of you is that you don't break. Even when you fall short, you push that extra mile. Your resilience and your work ethic inspire me more than you know. To me, you are always the absolute best.",
   },
   {
     day: 10,
