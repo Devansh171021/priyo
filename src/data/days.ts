@@ -138,7 +138,7 @@ export const DAYS: DayContent[] = [
     target: "Target 14: The Voice Note (The Tease)",
     title: "Day 14: The Tease",
     photoUrl: "/media/day-16.jpg",
-    voiceNoteUrl: "/media/day-16-voice.wav",
+    voiceNoteUrl: "/media/day-14-voice.wav",
     voiceNoteDurationSec: 90,
     letter:
       "Press play above to listen to today's voice note — a little tease from 1,600 kilometers away.",
@@ -236,6 +236,7 @@ export const DAYS: DayContent[] = [
     target: "Target 25: The Unseen Details",
     title: "Day 25: Ponytails and Baby Faces",
     photoUrl: "/media/day-24.mp4",
+    voiceNoteUrl: "/media/day-25-voice.wav",
     letter:
       "It is one thing to notice how beautiful you are when you get dressed up, but my absolute favorite things are the tiny, everyday details that most people probably miss.\n\n" +
       "Like the way your ponytail swings from side to side when you walk—it is honestly so undeniably sweet and cute. Or the absolute cheat code you have when you want me to do something for you. I will actively try to say no, and then you just hit me with that baby face, say 'chol na,' and it is instantly game over. I literally cannot say no to that face.\n\n" +
