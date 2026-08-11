@@ -303,7 +303,7 @@ export const DAYS: DayContent[] = [
     target: "Target 32: The Grand Finale",
     title: "Day 32: Welcome to 20",
     photoUrl: "/media/day-30.gif",
-    voiceNoteUrl: "/media/day-30-voice.wav",
+    voiceNoteUrl: "/media/day-32-voice.wav",
     voiceNoteDurationSec: 90,
     letter:
       "Happy 20th Birthday, Priyo.\n\n" +
